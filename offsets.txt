@@ -1,0 +1,2 @@
+passord		[["librustdesk.dll"+0178C148] + 20]
+id			[["librustdesk.dll"+0178C060] + 20]
