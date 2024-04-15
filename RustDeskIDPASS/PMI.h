@@ -61,12 +61,25 @@ void LesPassID(uintptr_t IDPASS, const char* Hva, std::vector<int>& offsets)
 
 	// Justering av lengde som leses...
 	// Vanligvis er passord 6 og ID maks 10.
-	// Minnescanner indikerer at evt. kortere er nullterminert.
-	if (!memcmp(Hva, "ID", 3))
+	if (!memcmp(Hva, "ID", 3)) {
 		ReadMem(false, IDPASS, passid, 10);
-	else if (!memcmp(Hva, "PASS", 5))
+
+		// ID kan være kortere enn 10 tall.
+		// Sjekk tall innefor UTF-8 0x30 - 0x39.
+		for (int a=0; a<10; a++) {
+			bool gyldighex = false;
+			for (int b=0x30; b<=0x39; b++) {
+				if (passid[a] == b)
+					gyldighex = true;
+			}
+			if (!gyldighex)
+				passid[a] = '\0';
+		}
+
+	} else if (!memcmp(Hva, "PASS", 5)) {
 		ReadMem(false, IDPASS, passid, 6);
-		
+	}
+
 	// Returner verdi.
 	std::cout << passid << "\n";
 }
